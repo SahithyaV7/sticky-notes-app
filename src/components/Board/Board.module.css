@@ -6,55 +6,104 @@
   bottom: 0;
   overflow: hidden;
   cursor: crosshair;
+
+  /* Layered cork-board texture */
   background-color: var(--board-bg);
   background-image:
-    radial-gradient(ellipse at 20% 30%, var(--board-bg-gradient-1) 0%, transparent 60%),
-    radial-gradient(ellipse at 75% 70%, var(--board-bg-gradient-2) 0%, transparent 55%);
+    /* Fine grain noise layer */
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E"),
+    /* Cork ring blobs */
+    radial-gradient(ellipse at 15% 25%, var(--board-bg-gradient-1) 0%, transparent 45%),
+    radial-gradient(ellipse at 80% 15%, var(--board-bg-gradient-2) 0%, transparent 40%),
+    radial-gradient(ellipse at 55% 75%, var(--board-bg-gradient-1) 0%, transparent 50%),
+    radial-gradient(ellipse at 10% 80%, var(--board-bg-gradient-3) 0%, transparent 38%),
+    radial-gradient(ellipse at 90% 60%, var(--board-bg-gradient-2) 0%, transparent 42%);
+  background-size: 200px 200px, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
 }
 
-.trashZone {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  border: 2px dashed var(--trash-color);
-  background: var(--trash-bg);
+/* Empty-state hint */
+.emptyHint {
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 16px;
+  pointer-events: none;
+  user-select: none;
+}
+
+.emptyHintIcon {
+  font-size: 56px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  opacity: 0.55;
+}
+
+.emptyHintText {
+  font-size: 14px;
+  color: rgba(60, 40, 10, 0.55);
+  text-align: center;
+  line-height: 1.7;
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(4px);
+  padding: 16px 28px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.emptyHintText strong {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(50, 30, 5, 0.75);
+  margin-bottom: 6px;
+}
+
+/* Trash zone — pill at bottom-centre, shown only while dragging */
+.trashZone {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 160px;
+  height: 52px;
+  border-radius: 26px;
+  border: 2px dashed var(--trash-color);
+  background: var(--trash-bg);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.15s ease, background 0.15s ease, transform 0.15s ease;
+  transition: opacity 0.18s ease, background 0.15s ease, transform 0.15s ease;
   z-index: 10000;
-  cursor: default;
   user-select: none;
 }
 
 .trashZone .icon {
-  font-size: 22px;
+  font-size: 20px;
   line-height: 1;
 }
 
 .trashZone .label {
-  font-size: 9px;
+  font-size: 13px;
+  font-weight: 500;
   color: var(--trash-color);
-  text-align: center;
-  line-height: 1.2;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
 }
 
-/* Revealed while any note is being dragged */
 :global(body.is-dragging) .trashZone {
   opacity: 1;
   pointer-events: auto;
 }
 
-/* Highlight when a dragged note is over the zone */
 .trashZone[data-drag-over='true'] {
   background: var(--trash-bg-active);
-  transform: scale(1.15);
+  transform: translateX(-50%) scale(1.06);
   border-style: solid;
 }

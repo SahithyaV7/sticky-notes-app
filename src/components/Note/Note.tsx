@@ -20,7 +20,6 @@ export function Note({ note }: NoteProps) {
   const editorRef = useRef<HTMLDivElement>(null);
   const [isEditing, setIsEditing] = useState(false);
 
-  // When editing begins: populate content and move cursor to end
   useEffect(() => {
     if (!isEditing || !editorRef.current) return;
     editorRef.current.innerText = note.text;
@@ -100,6 +99,11 @@ export function Note({ note }: NoteProps) {
     setIsEditing(false);
   }
 
+  function handleDelete(e: ReactMouseEvent) {
+    e.stopPropagation();
+    dispatch({ type: 'DELETE_NOTE', payload: { id: note.id } });
+  }
+
   const noteStyle: CSSProperties = {
     left: note.x,
     top: note.y,
@@ -121,7 +125,7 @@ export function Note({ note }: NoteProps) {
         style={headerStyle}
         onPointerDown={handleHeaderPointerDown}
       >
-        <span className={styles.title}>Sticky Note</span>
+        <span className={styles.dragHint} aria-hidden="true">⠿</span>
         <div
           className={styles.swatches}
           onPointerDown={e => e.stopPropagation()}
@@ -142,6 +146,15 @@ export function Note({ note }: NoteProps) {
             />
           ))}
         </div>
+        <button
+          type="button"
+          className={styles.deleteBtn}
+          aria-label="Delete note"
+          onPointerDown={e => e.stopPropagation()}
+          onClick={handleDelete}
+        >
+          ×
+        </button>
       </div>
       <div
         className={`${styles.body} ${isEditing ? styles.editing : ''}`}
@@ -156,10 +169,12 @@ export function Note({ note }: NoteProps) {
             onBlur={handleEditorBlur}
           />
         ) : (
-          <p>{note.text}</p>
+          note.text
+            ? <p>{note.text}</p>
+            : <p className={styles.placeholder}>Double-click to add text…</p>
         )}
       </div>
-      <div className={styles.resizeHandle} onPointerDown={handleResizePointerDown} />
+      <div className={styles.resizeHandle} onPointerDown={handleResizePointerDown} aria-label="Resize note" />
     </div>
   );
 }

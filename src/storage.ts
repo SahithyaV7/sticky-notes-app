@@ -40,7 +40,7 @@ export function loadState(): BoardState | null {
     if (raw === null) return null;
     const parsed: unknown = JSON.parse(raw);
     if (!isBoardState(parsed)) return null;
-    // Normalize: apiStatus is always reset to idle on page load
+    // apiStatus is always transient — reset to idle rather than persisting stale state
     return { ...parsed, apiStatus: 'idle' };
   } catch {
     return null;

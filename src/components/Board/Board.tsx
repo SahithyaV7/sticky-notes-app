@@ -42,6 +42,17 @@ function BoardCanvas() {
       role="application"
       aria-label="Sticky notes board"
     >
+      {state.notes.length === 0 && (
+        <div className={styles.emptyHint} aria-hidden="true">
+          <span className={styles.emptyHintIcon}>📝</span>
+          <p className={styles.emptyHintText}>
+            <strong>Click anywhere to add a note</strong>
+            Double-click a note to edit · Drag the header to move
+            <br />
+            Changes save automatically
+          </p>
+        </div>
+      )}
       {state.notes.map(note => (
         <Note key={note.id} note={note} />
       ))}

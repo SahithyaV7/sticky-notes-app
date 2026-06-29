@@ -6,11 +6,11 @@ export const NOTE_MIN_WIDTH = 160;
 export const NOTE_MIN_HEIGHT = 120;
 
 export const COLORS: NoteColor[] = [
-  { bg: '#fef9c3', header: '#fde047' }, // yellow
-  { bg: '#dcfce7', header: '#86efac' }, // green
-  { bg: '#dbeafe', header: '#93c5fd' }, // blue
-  { bg: '#fce7f3', header: '#f9a8d4' }, // pink
-  { bg: '#ede9fe', header: '#c4b5fd' }, // purple
+  { bg: '#fffbeb', header: '#fcd34d' }, // amber
+  { bg: '#f0fdf4', header: '#6ee7b7' }, // mint
+  { bg: '#eff6ff', header: '#93c5fd' }, // sky
+  { bg: '#fdf4ff', header: '#e879f9' }, // fuchsia
+  { bg: '#fff1f2', header: '#fda4af' }, // rose
 ];
 
 export type Action =

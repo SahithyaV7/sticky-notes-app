@@ -1,11 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
 :root {
-  --board-bg: #f0ece4;
-  --board-bg-gradient-1: rgba(180, 160, 120, 0.15);
-  --board-bg-gradient-2: rgba(160, 140, 100, 0.12);
-  --trash-color: #c03030;
-  --trash-bg: rgba(200, 50, 50, 0.15);
-  --trash-bg-active: rgba(200, 50, 50, 0.45);
-  --note-shadow: 2px 3px 8px rgba(0, 0, 0, 0.25);
+  /* Board */
+  --board-bg: #c8b99a;
+  --board-bg-gradient-1: rgba(120, 90, 50, 0.18);
+  --board-bg-gradient-2: rgba(100, 75, 40, 0.12);
+  --board-bg-gradient-3: rgba(140, 105, 60, 0.1);
+
+  /* Trash zone */
+  --trash-color: #dc2626;
+  --trash-bg: rgba(220, 38, 38, 0.1);
+  --trash-bg-active: rgba(220, 38, 38, 0.35);
+
+  /* Note */
+  --note-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.07),
+    0 4px 8px rgba(0, 0, 0, 0.1),
+    0 8px 20px rgba(0, 0, 0, 0.08);
+  --note-shadow-hover:
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    0 8px 20px rgba(0, 0, 0, 0.15),
+    0 16px 36px rgba(0, 0, 0, 0.1);
+  --note-shadow-drag:
+    0 12px 32px rgba(0, 0, 0, 0.22),
+    0 4px 8px rgba(0, 0, 0, 0.14);
+
+  /* Toolbar */
+  --toolbar-bg: #1c1c1e;
+  --toolbar-btn-text: #ffffff;
+  --toolbar-btn-border: rgba(255, 255, 255, 0.2);
+  --toolbar-btn-hover-bg: rgba(255, 255, 255, 0.1);
+
+  /* API status dot */
+  --status-idle: #34d399;
+  --status-loading: #fbbf24;
+  --status-error: #f87171;
 }
 
 *,
@@ -18,7 +47,7 @@ body {
   margin: 0;
   min-width: 1024px;
   min-height: 768px;
-  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Inter', system-ui, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

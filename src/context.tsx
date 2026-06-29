@@ -71,7 +71,6 @@ export function BoardProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    // Deleted notes: present in prev but absent in curr
     for (const prevNote of prev) {
       if (!curr.find(n => n.id === prevNote.id)) {
         apiDeleteNote(prevNote.id).catch(e => console.error('[API] delete failed:', e));

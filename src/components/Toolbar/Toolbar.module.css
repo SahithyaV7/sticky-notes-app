@@ -1,10 +1,3 @@
-:root {
-  --toolbar-bg: #2b2b2b;
-  --toolbar-btn-text: #ffffff;
-  --toolbar-btn-border: #666666;
-  --toolbar-btn-hover-bg: rgba(255, 255, 255, 0.1);
-}
-
 .toolbar {
   position: fixed;
   top: 0;
@@ -14,42 +7,105 @@
   background: var(--toolbar-bg);
   display: flex;
   align-items: center;
-  padding: 0 12px;
-  gap: 8px;
+  padding: 0 16px;
+  gap: 12px;
   z-index: 9999;
+  /* Thin bottom glow to separate from board */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.appName {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+
+/* Thin separator */
+.appName::after {
+  content: '';
+  display: inline-block;
+  width: 1px;
+  height: 14px;
+  background: rgba(255, 255, 255, 0.15);
+  margin-left: 14px;
+  vertical-align: middle;
 }
 
 .button {
   color: var(--toolbar-btn-text);
-  background: transparent;
+  background: rgba(255, 255, 255, 0.08);
   border: 1px solid var(--toolbar-btn-border);
-  border-radius: 4px;
-  padding: 4px 12px;
-  font-size: 13px;
+  border-radius: 6px;
+  padding: 5px 14px;
+  font-size: 12.5px;
+  font-weight: 500;
+  font-family: inherit;
   cursor: pointer;
   line-height: 1;
+  letter-spacing: 0.01em;
+  transition: background 0.12s ease, border-color 0.12s ease;
 }
 
 .button:hover {
-  background: var(--toolbar-btn-hover-bg);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.button:active {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.spacer {
+  flex: 1;
+}
+
+/* Save-status badge */
+.statusBadge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+  transition: background 0.25s ease, border-color 0.25s ease;
 }
 
 .statusDot {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   flex-shrink: 0;
   transition: background-color 0.3s ease;
 }
 
-.statusDot.idle {
-  background-color: #6b7280;
+.statusLabel {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: color 0.25s ease;
 }
 
-.statusDot.loading {
-  background-color: #facc15;
-}
+/* idle — subtle green */
+.statusBadge.idle .statusDot   { background-color: var(--status-idle); }
+.statusBadge.idle .statusLabel { color: rgba(255, 255, 255, 0.4); }
 
-.statusDot.error {
-  background-color: #ef4444;
+/* loading — amber */
+.statusBadge.loading {
+  background: rgba(251, 191, 36, 0.1);
+  border-color: rgba(251, 191, 36, 0.2);
 }
+.statusBadge.loading .statusDot   { background-color: var(--status-loading); }
+.statusBadge.loading .statusLabel { color: rgba(251, 191, 36, 0.9); }
+
+/* error — red */
+.statusBadge.error {
+  background: rgba(248, 113, 113, 0.1);
+  border-color: rgba(248, 113, 113, 0.2);
+}
+.statusBadge.error .statusDot   { background-color: var(--status-error); }
+.statusBadge.error .statusLabel { color: rgba(248, 113, 113, 0.9); }
