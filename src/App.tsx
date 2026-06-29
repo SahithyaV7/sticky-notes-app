@@ -1,5 +1,11 @@
+import { BoardProvider } from '@/context';
+
 function App() {
-  return <div id="app" />;
+  return (
+    <BoardProvider>
+      <></>
+    </BoardProvider>
+  );
 }
 
 export default App;
