@@ -4,7 +4,9 @@ import { useBoardContext } from '@/context';
 import { useTrashZone } from '@/trashContext';
 import { useDrag } from '@/hooks/useDrag';
 import { useResize } from '@/hooks/useResize';
-import { NOTE_MIN_WIDTH, NOTE_MIN_HEIGHT } from '@/reducer';
+import { NOTE_MIN_WIDTH, NOTE_MIN_HEIGHT, COLORS } from '@/reducer';
+
+const COLOR_NAMES = ['Yellow', 'Green', 'Blue', 'Pink', 'Purple'] as const;
 import styles from './Note.module.css';
 
 interface NoteProps {
@@ -120,6 +122,26 @@ export function Note({ note }: NoteProps) {
         onPointerDown={handleHeaderPointerDown}
       >
         <span className={styles.title}>Sticky Note</span>
+        <div
+          className={styles.swatches}
+          onPointerDown={e => e.stopPropagation()}
+        >
+          {COLORS.map((color, i) => (
+            <button
+              key={color.bg}
+              type="button"
+              className={styles.swatch}
+              style={{ background: color.bg }}
+              aria-label={`Set note color to ${COLOR_NAMES[i]}`}
+              aria-pressed={color.bg === note.color.bg}
+              onClick={() => {
+                if (color.bg !== note.color.bg) {
+                  dispatch({ type: 'SET_COLOR', payload: { id: note.id, color } });
+                }
+              }}
+            />
+          ))}
+        </div>
       </div>
       <div
         className={`${styles.body} ${isEditing ? styles.editing : ''}`}
