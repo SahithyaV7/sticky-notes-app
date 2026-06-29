@@ -2,6 +2,7 @@ import { MouseEvent } from 'react';
 import { useBoardContext } from '@/context';
 import { NOTE_DEFAULT_WIDTH, NOTE_DEFAULT_HEIGHT } from '@/reducer';
 import { Toolbar } from '@/components/Toolbar/Toolbar';
+import { Note } from '@/components/Note/Note';
 import styles from './Board.module.css';
 
 const TOOLBAR_HEIGHT = 40;
@@ -36,7 +37,9 @@ export function Board() {
     <>
       <Toolbar />
       <div className={styles.board} onClick={handleBoardClick}>
-        {state.notes.map(note => null)}
+        {state.notes.map(note => (
+          <Note key={note.id} note={note} />
+        ))}
       </div>
     </>
   );
