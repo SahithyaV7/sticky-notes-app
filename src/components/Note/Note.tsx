@@ -1,6 +1,7 @@
 import { CSSProperties, PointerEvent, useRef } from 'react';
 import { Note as NoteType } from '@/types';
 import { useBoardContext } from '@/context';
+import { useTrashZone } from '@/trashContext';
 import { useDrag } from '@/hooks/useDrag';
 import { useResize } from '@/hooks/useResize';
 import { NOTE_MIN_WIDTH, NOTE_MIN_HEIGHT } from '@/reducer';
@@ -12,16 +13,29 @@ interface NoteProps {
 
 export function Note({ note }: NoteProps) {
   const { state, dispatch } = useBoardContext();
+  const trashRef = useTrashZone();
   const noteRef = useRef<HTMLDivElement>(null);
 
+  function resetDragStyles() {
+    if (!noteRef.current) return;
+    noteRef.current.style.transform = '';
+    noteRef.current.style.opacity = '';
+  }
+
   const { startDrag } = useDrag({
+    trashRef,
     onMove(x, y) {
       if (!noteRef.current) return;
+      noteRef.current.style.opacity = '0.85';
       noteRef.current.style.transform = `translate(${x - note.x}px, ${y - note.y}px)`;
     },
     onEnd(x, y) {
-      if (noteRef.current) noteRef.current.style.transform = '';
+      resetDragStyles();
       dispatch({ type: 'MOVE_NOTE', payload: { id: note.id, x, y } });
+    },
+    onDelete() {
+      resetDragStyles();
+      dispatch({ type: 'DELETE_NOTE', payload: { id: note.id } });
     },
   });
 
@@ -34,8 +48,6 @@ export function Note({ note }: NoteProps) {
       noteRef.current.style.height = `${height}px`;
     },
     onEnd(width, height) {
-      // Don't clear inline styles — React will reconcile with the new state values,
-      // preventing a flash of collapsed dimensions between dispatch and re-render.
       dispatch({ type: 'RESIZE_NOTE', payload: { id: note.id, width, height } });
     },
   });
