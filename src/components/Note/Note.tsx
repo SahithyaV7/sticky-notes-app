@@ -1,4 +1,4 @@
-import { CSSProperties, PointerEvent, useRef } from 'react';
+import { CSSProperties, MouseEvent as ReactMouseEvent, PointerEvent, useEffect, useRef, useState } from 'react';
 import { Note as NoteType } from '@/types';
 import { useBoardContext } from '@/context';
 import { useTrashZone } from '@/trashContext';
@@ -15,6 +15,23 @@ export function Note({ note }: NoteProps) {
   const { state, dispatch } = useBoardContext();
   const trashRef = useTrashZone();
   const noteRef = useRef<HTMLDivElement>(null);
+  const editorRef = useRef<HTMLDivElement>(null);
+  const [isEditing, setIsEditing] = useState(false);
+
+  // When editing begins: populate content and move cursor to end
+  useEffect(() => {
+    if (!isEditing || !editorRef.current) return;
+    editorRef.current.innerText = note.text;
+    editorRef.current.focus();
+    const range = document.createRange();
+    range.selectNodeContents(editorRef.current);
+    range.collapse(false);
+    window.getSelection()?.removeAllRanges();
+    window.getSelection()?.addRange(range);
+  // note.text intentionally omitted — we only want this to fire when editing opens,
+  // not on every external text update (which would reset the cursor mid-type)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEditing]);
 
   function resetDragStyles() {
     if (!noteRef.current) return;
@@ -59,11 +76,26 @@ export function Note({ note }: NoteProps) {
   }
 
   function handleHeaderPointerDown(e: PointerEvent<HTMLElement>) {
+    if (isEditing) return;
     startDrag(e, note.x, note.y);
   }
 
   function handleResizePointerDown(e: PointerEvent<HTMLElement>) {
     startResize(e);
+  }
+
+  function handleBodyDoubleClick(e: ReactMouseEvent) {
+    e.stopPropagation();
+    setIsEditing(true);
+  }
+
+  function handleEditorBlur() {
+    // Chromium appends a trailing \n to contentEditable innerText — strip it
+    const text = (editorRef.current?.innerText ?? '').replace(/\n$/, '');
+    if (text !== note.text) {
+      dispatch({ type: 'EDIT_TEXT', payload: { id: note.id, text } });
+    }
+    setIsEditing(false);
   }
 
   const noteStyle: CSSProperties = {
@@ -77,6 +109,7 @@ export function Note({ note }: NoteProps) {
 
   const headerStyle: CSSProperties = {
     background: note.color.header,
+    pointerEvents: isEditing ? 'none' : undefined,
   };
 
   return (
@@ -88,8 +121,21 @@ export function Note({ note }: NoteProps) {
       >
         <span className={styles.title}>Sticky Note</span>
       </div>
-      <div className={styles.body}>
-        <p>{note.text}</p>
+      <div
+        className={`${styles.body} ${isEditing ? styles.editing : ''}`}
+        onDoubleClick={handleBodyDoubleClick}
+      >
+        {isEditing ? (
+          <div
+            ref={editorRef}
+            className={styles.editor}
+            contentEditable
+            suppressContentEditableWarning
+            onBlur={handleEditorBlur}
+          />
+        ) : (
+          <p>{note.text}</p>
+        )}
       </div>
       <div className={styles.resizeHandle} onPointerDown={handleResizePointerDown} />
     </div>
