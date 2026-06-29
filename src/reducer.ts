@@ -21,9 +21,10 @@ export type Action =
   | { type: 'EDIT_TEXT'; payload: { id: string; text: string } }
   | { type: 'BRING_TO_FRONT'; payload: { id: string } }
   | { type: 'SET_COLOR'; payload: { id: string; color: NoteColor } }
-  | { type: 'LOAD_STATE'; payload: BoardState };
+  | { type: 'LOAD_STATE'; payload: BoardState }
+  | { type: 'SET_API_STATUS'; payload: 'idle' | 'loading' | 'error' };
 
-export const initialState: BoardState = { notes: [], maxZ: 0 };
+export const initialState: BoardState = { notes: [], maxZ: 0, apiStatus: 'idle' };
 
 export function reducer(state: BoardState, action: Action): BoardState {
   switch (action.type) {
@@ -40,7 +41,7 @@ export function reducer(state: BoardState, action: Action): BoardState {
         color,
         zIndex: newZ,
       };
-      return { notes: [...state.notes, note], maxZ: newZ };
+      return { ...state, notes: [...state.notes, note], maxZ: newZ };
     }
 
     case 'MOVE_NOTE':
@@ -81,6 +82,7 @@ export function reducer(state: BoardState, action: Action): BoardState {
     case 'BRING_TO_FRONT': {
       const newZ = state.maxZ + 1;
       return {
+        ...state,
         notes: state.notes.map(n =>
           n.id === action.payload.id ? { ...n, zIndex: newZ } : n,
         ),
@@ -98,5 +100,8 @@ export function reducer(state: BoardState, action: Action): BoardState {
 
     case 'LOAD_STATE':
       return action.payload;
+
+    case 'SET_API_STATUS':
+      return { ...state, apiStatus: action.payload };
   }
 }

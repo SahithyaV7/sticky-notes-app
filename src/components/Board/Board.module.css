@@ -6,10 +6,10 @@
   bottom: 0;
   overflow: hidden;
   cursor: crosshair;
-  background-color: #f0ece4;
+  background-color: var(--board-bg);
   background-image:
-    radial-gradient(ellipse at 20% 30%, rgba(180, 160, 120, 0.15) 0%, transparent 60%),
-    radial-gradient(ellipse at 75% 70%, rgba(160, 140, 100, 0.12) 0%, transparent 55%);
+    radial-gradient(ellipse at 20% 30%, var(--board-bg-gradient-1) 0%, transparent 60%),
+    radial-gradient(ellipse at 75% 70%, var(--board-bg-gradient-2) 0%, transparent 55%);
 }
 
 .trashZone {
@@ -19,8 +19,8 @@
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  border: 2px dashed #c03030;
-  background: rgba(200, 50, 50, 0.15);
+  border: 2px dashed var(--trash-color);
+  background: var(--trash-bg);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -41,7 +41,7 @@
 
 .trashZone .label {
   font-size: 9px;
-  color: #c03030;
+  color: var(--trash-color);
   text-align: center;
   line-height: 1.2;
 }
@@ -54,7 +54,7 @@
 
 /* Highlight when a dragged note is over the zone */
 .trashZone[data-drag-over='true'] {
-  background: rgba(200, 50, 50, 0.45);
+  background: var(--trash-bg-active);
   transform: scale(1.15);
   border-style: solid;
 }

@@ -36,7 +36,12 @@ function BoardCanvas() {
   }
 
   return (
-    <div className={styles.board} onClick={handleBoardClick}>
+    <div
+      className={styles.board}
+      onClick={handleBoardClick}
+      role="application"
+      aria-label="Sticky notes board"
+    >
       {state.notes.map(note => (
         <Note key={note.id} note={note} />
       ))}

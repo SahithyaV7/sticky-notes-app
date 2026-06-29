@@ -29,8 +29,9 @@ function isBoardState(value: unknown): value is BoardState {
   return Array.isArray(v.notes) && v.notes.every(isNote) && typeof v.maxZ === 'number';
 }
 
+// apiStatus is transient — persist only structural data
 export function saveState(state: BoardState): void {
-  localStorage.setItem(KEY, JSON.stringify(state));
+  localStorage.setItem(KEY, JSON.stringify({ notes: state.notes, maxZ: state.maxZ }));
 }
 
 export function loadState(): BoardState | null {
@@ -38,7 +39,9 @@ export function loadState(): BoardState | null {
     const raw = localStorage.getItem(KEY);
     if (raw === null) return null;
     const parsed: unknown = JSON.parse(raw);
-    return isBoardState(parsed) ? parsed : null;
+    if (!isBoardState(parsed)) return null;
+    // Normalize: apiStatus is always reset to idle on page load
+    return { ...parsed, apiStatus: 'idle' };
   } catch {
     return null;
   }

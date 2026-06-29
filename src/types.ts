@@ -17,4 +17,5 @@ export interface Note {
 export interface BoardState {
   notes: Note[];
   maxZ: number;
+  apiStatus: 'idle' | 'loading' | 'error';
 }

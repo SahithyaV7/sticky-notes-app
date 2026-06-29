@@ -33,3 +33,23 @@
 .button:hover {
   background: var(--toolbar-btn-hover-bg);
 }
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: background-color 0.3s ease;
+}
+
+.statusDot.idle {
+  background-color: #6b7280;
+}
+
+.statusDot.loading {
+  background-color: #facc15;
+}
+
+.statusDot.error {
+  background-color: #ef4444;
+}

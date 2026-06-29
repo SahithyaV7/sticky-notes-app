@@ -5,9 +5,9 @@ import { useTrashZone } from '@/trashContext';
 import { useDrag } from '@/hooks/useDrag';
 import { useResize } from '@/hooks/useResize';
 import { NOTE_MIN_WIDTH, NOTE_MIN_HEIGHT, COLORS } from '@/reducer';
+import styles from './Note.module.css';
 
 const COLOR_NAMES = ['Yellow', 'Green', 'Blue', 'Pink', 'Purple'] as const;
-import styles from './Note.module.css';
 
 interface NoteProps {
   note: NoteType;
