@@ -2,6 +2,8 @@ import { CSSProperties, PointerEvent, useRef } from 'react';
 import { Note as NoteType } from '@/types';
 import { useBoardContext } from '@/context';
 import { useDrag } from '@/hooks/useDrag';
+import { useResize } from '@/hooks/useResize';
+import { NOTE_MIN_WIDTH, NOTE_MIN_HEIGHT } from '@/reducer';
 import styles from './Note.module.css';
 
 interface NoteProps {
@@ -23,11 +25,33 @@ export function Note({ note }: NoteProps) {
     },
   });
 
-  function handleHeaderPointerDown(e: PointerEvent<HTMLElement>) {
+  const { startResize } = useResize(note.width, note.height, {
+    minWidth: NOTE_MIN_WIDTH,
+    minHeight: NOTE_MIN_HEIGHT,
+    onResize(width, height) {
+      if (!noteRef.current) return;
+      noteRef.current.style.width = `${width}px`;
+      noteRef.current.style.height = `${height}px`;
+    },
+    onEnd(width, height) {
+      // Don't clear inline styles — React will reconcile with the new state values,
+      // preventing a flash of collapsed dimensions between dispatch and re-render.
+      dispatch({ type: 'RESIZE_NOTE', payload: { id: note.id, width, height } });
+    },
+  });
+
+  function handleNotePointerDown() {
     if (note.zIndex < state.maxZ) {
       dispatch({ type: 'BRING_TO_FRONT', payload: { id: note.id } });
     }
+  }
+
+  function handleHeaderPointerDown(e: PointerEvent<HTMLElement>) {
     startDrag(e, note.x, note.y);
+  }
+
+  function handleResizePointerDown(e: PointerEvent<HTMLElement>) {
+    startResize(e);
   }
 
   const noteStyle: CSSProperties = {
@@ -44,7 +68,7 @@ export function Note({ note }: NoteProps) {
   };
 
   return (
-    <div ref={noteRef} className={styles.note} style={noteStyle}>
+    <div ref={noteRef} className={styles.note} style={noteStyle} onPointerDown={handleNotePointerDown}>
       <div
         className={styles.header}
         style={headerStyle}
@@ -55,7 +79,7 @@ export function Note({ note }: NoteProps) {
       <div className={styles.body}>
         <p>{note.text}</p>
       </div>
-      <div className={styles.resizeHandle} />
+      <div className={styles.resizeHandle} onPointerDown={handleResizePointerDown} />
     </div>
   );
 }

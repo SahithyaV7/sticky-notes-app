@@ -2,6 +2,8 @@ import { BoardState, Note, NoteColor } from '@/types';
 
 export const NOTE_DEFAULT_WIDTH = 200;
 export const NOTE_DEFAULT_HEIGHT = 160;
+export const NOTE_MIN_WIDTH = 160;
+export const NOTE_MIN_HEIGHT = 120;
 
 export const COLORS: NoteColor[] = [
   { bg: '#fef9c3', header: '#fde047' }, // yellow
@@ -58,8 +60,8 @@ export function reducer(state: BoardState, action: Action): BoardState {
           n.id === action.payload.id
             ? {
                 ...n,
-                width: Math.max(160, action.payload.width),
-                height: Math.max(120, action.payload.height),
+                width: Math.max(NOTE_MIN_WIDTH, action.payload.width),
+                height: Math.max(NOTE_MIN_HEIGHT, action.payload.height),
               }
             : n,
         ),
