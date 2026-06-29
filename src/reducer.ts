@@ -1,5 +1,8 @@
 import { BoardState, Note, NoteColor } from '@/types';
 
+export const NOTE_DEFAULT_WIDTH = 200;
+export const NOTE_DEFAULT_HEIGHT = 160;
+
 export const COLORS: NoteColor[] = [
   { bg: '#fef9c3', header: '#fde047' }, // yellow
   { bg: '#dcfce7', header: '#86efac' }, // green
@@ -29,8 +32,8 @@ export function reducer(state: BoardState, action: Action): BoardState {
         id: crypto.randomUUID(),
         x: action.payload.x,
         y: action.payload.y,
-        width: 200,
-        height: 160,
+        width: NOTE_DEFAULT_WIDTH,
+        height: NOTE_DEFAULT_HEIGHT,
         text: '',
         color,
         zIndex: newZ,
